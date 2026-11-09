@@ -5,410 +5,649 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Engagement Invitation | Vibin & Preetha</title>
   
-  <!-- Google Fonts & FontAwesome Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts & FontAwesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Mukta+Malar:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
-      --primary-gold: #d4af37;
-      --deep-maroon: #4a0e17;
-      --soft-cream: #fffdf9;
-      --text-dark: #2c2c2c;
+      --gold: #d4af37;
+      --gold-glow: #ffe89e;
+      --maroon: #4a0e17;
+      --maroon-dark: #2a070c;
+      --cream: #fffdf9;
+      --text: #2c2c2c;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Montserrat', sans-serif;
-      background-color: var(--deep-maroon);
-      color: var(--text-dark);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: 'Montserrat', 'Mukta Malar', sans-serif;
+      background: radial-gradient(circle at center, #6b1420 0%, var(--maroon-dark) 100%);
+      color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
-      perspective: 1000px;
-    }
-
-    /* Floating background sparkles */
-    .bg-sparkles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 1;
-      background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.15) 0%, rgba(74, 14, 23, 0.95) 100%);
-    }
-
-    /* ENVELOPE / OPENING SCREEN */
-    .envelope-container {
-      position: relative;
-      width: 320px;
-      height: 220px;
-      background: #8b1e2d;
-      border-radius: 8px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-      cursor: pointer;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      z-index: 10;
-      transition: transform 0.6s ease, opacity 0.6s ease;
-      border: 2px solid var(--primary-gold);
+      justify-content: center;
+      position: relative;
     }
 
-    .envelope-container:hover {
-      transform: scale(1.03);
+    /* Floating Particles & Cupids */
+    .bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; }
+    
+    .cupid {
+      position: fixed;
+      font-size: 2rem;
+      color: var(--gold-glow);
+      filter: drop-shadow(0 0 10px rgba(212,175,55,0.8));
+      z-index: 2;
+      pointer-events: none;
+      animation: flyCupid 14s linear infinite;
     }
 
-    .envelope-seal {
-      width: 70px;
-      height: 70px;
-      background: var(--primary-gold);
+    @keyframes flyCupid {
+      0% { transform: translate(-10vw, 80vh) scale(0.6) rotate(-10deg); opacity: 0; }
+      20% { opacity: 0.9; }
+      80% { opacity: 0.9; }
+      100% { transform: translate(110vw, 10vh) scale(1.1) rotate(10deg); opacity: 0; }
+    }
+
+    /* Language Switcher */
+    .lang-switcher {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      padding: 5px 12px;
+      display: flex;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .lang-btn.active {
+      background: var(--gold);
+      color: var(--maroon);
+    }
+
+    /* ENVELOPE SCREEN */
+    .envelope-screen {
+      position: relative;
+      z-index: 50;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s;
+    }
+
+    .envelope-card {
+      width: 330px;
+      height: 230px;
+      background: linear-gradient(135deg, #8b1e2d, #4a0e17);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wax-seal {
+      width: 75px;
+      height: 75px;
+      background: radial-gradient(circle, #f3e5ab 0%, var(--gold) 70%, #997a15 100%);
       border-radius: 50%;
       display: flex;
-      justify-content: center;
       align-items: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      animation: pulse 2s infinite;
+      justify-content: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4), inset 0 0 8px rgba(255,255,255,0.6);
+      animation: pulseSeal 2s infinite;
     }
 
-    .envelope-seal i {
-      font-size: 2rem;
-      color: var(--deep-maroon);
+    .wax-seal i { font-size: 2.2rem; color: var(--maroon); }
+
+    @keyframes pulseSeal {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(212,175,55,0.5); }
+      50% { transform: scale(1.08); box-shadow: 0 0 25px rgba(212,175,55,0.9); }
     }
 
-    .tap-text {
+    .tap-hint {
+      margin-top: 18px;
       color: #fff;
-      margin-top: 15px;
       font-size: 0.9rem;
       letter-spacing: 2px;
       text-transform: uppercase;
+      font-weight: 500;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
-
-    /* INVITATION CARD */
-    .card {
+    /* MAIN INVITATION CARD */
+    .invite-container {
       display: none;
-      width: 90%;
-      max-width: 650px;
-      background: var(--soft-cream);
-      border: 12px double var(--primary-gold);
-      border-radius: 12px;
-      padding: 40px 25px;
-      text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-      z-index: 20;
+      width: 92%;
+      max-width: 680px;
+      background: var(--cream);
+      border: 10px double var(--gold);
+      border-radius: 16px;
+      padding: 30px 20px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+      z-index: 10;
+      position: relative;
+      margin: 40px 0;
       opacity: 0;
-      transform: translateY(30px) scale(0.95);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-      margin: 20px 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s, transform 0.8s;
     }
 
-    .card.show {
+    .invite-container.show {
       display: block;
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
 
-    .header-verse {
-      font-size: 0.85rem;
-      color: #666;
-      font-style: italic;
-      margin-bottom: 20px;
+    /* Navigation Tabs & Swipe */
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      border-bottom: 2px solid rgba(212,175,55,0.3);
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
     }
 
-    .praise {
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      color: var(--deep-maroon);
-      letter-spacing: 2px;
-      margin-bottom: 5px;
+    .tab-btn {
+      background: none;
+      border: 1px solid var(--gold);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--maroon);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
     }
 
-    .invitation-body {
-      font-size: 0.95rem;
-      color: #444;
-      line-height: 1.6;
+    .tab-btn.active {
+      background: var(--maroon);
+      color: var(--gold-glow);
+    }
+
+    .tab-content { display: none; text-align: center; }
+    .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10deg); } to { opacity: 1; transform: translateY(0); } }
+
+    /* CONTENT STYLES */
+    .header-tag { font-family: 'Cinzel', serif; font-weight: 700; color: var(--maroon); letter-spacing: 2px; margin-bottom: 6px; }
+    .scripture { font-size: 0.85rem; color: #555; font-style: italic; margin-bottom: 18px; }
+
+    .couples-area { margin: 25px 0; }
+    .person-name { font-family: 'Great Vibes', cursive; font-size: 3.2rem; color: var(--maroon); text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+    .parents-info { font-size: 0.85rem; color: #666; margin-top: 2px; }
+    .and-symbol { font-family: 'Great Vibes', cursive; font-size: 2.4rem; color: var(--gold); margin: 8px 0; }
+
+    .invitation-text { font-size: 0.92rem; line-height: 1.6; color: #444; margin: 18px 0; }
+
+    /* MODERN ELEGANT RING ANIMATION */
+    .ring-stage {
+      position: relative;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 12px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .ring-glow-aura {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(212,175,55,0.4) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulseAura 3s infinite alternate;
+    }
+
+    @keyframes pulseAura { from { transform: scale(0.8); opacity: 0.5; } to { transform: scale(1.3); opacity: 0.9; } }
+
+    .ring-svg-wrapper {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      filter: drop-shadow(0 8px 15px rgba(0,0,0,0.3));
+    }
+
+    .groom-ring { left: 20%; animation: floatGroomRing 4s ease-in-out infinite alternate; }
+    .bride-ring { right: 20%; animation: floatBrideRing 4s ease-in-out infinite alternate; }
+
+    @keyframes floatGroomRing {
+      0% { transform: translateX(0) rotate(-15deg); }
+      100% { transform: translateX(50px) rotate(5deg); }
+    }
+
+    @keyframes floatBrideRing {
+      0% { transform: translateX(0) rotate(15deg); }
+      100% { transform: translateX(-50px) rotate(-5deg); }
+    }
+
+    .sparkle-beam {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px 4px var(--gold-glow);
+      animation: flashSparkle 1.5s infinite;
+    }
+
+    @keyframes flashSparkle { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.5); } }
+
+    /* VENUE & DETAILS */
+    .details-card {
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      padding: 18px;
       margin: 20px 0;
     }
 
-    .names-section {
-      margin: 25px 0;
-    }
+    .time-badge { font-family: 'Cinzel', serif; font-weight: 700; color: var(--maroon); font-size: 1.1rem; margin-bottom: 8px; }
 
-    .couple-name {
-      font-family: 'Great Vibes', cursive;
-      font-size: 3rem;
-      color: var(--deep-maroon);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
+    /* TIMER */
+    .timer-grid { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
+    .timer-box { background: var(--maroon); color: #fff; padding: 10px; border-radius: 8px; min-width: 62px; }
+    .timer-num { font-size: 1.3rem; font-weight: 700; color: var(--gold-glow); display: block; }
+    .timer-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
 
-    .parents-name {
-      font-size: 0.85rem;
-      color: #555;
-      margin-top: 4px;
-    }
-
-    .ampersand {
-      font-family: 'Great Vibes', cursive;
-      font-size: 2.2rem;
-      color: var(--primary-gold);
-      margin: 10px 0;
-    }
-
-    /* EVENT DETAILS */
-    .event-details {
-      background: rgba(212, 175, 55, 0.08);
-      border-top: 1px solid var(--primary-gold);
-      border-bottom: 1px solid var(--primary-gold);
-      padding: 20px 10px;
-      margin: 25px 0;
-    }
-
-    .date-time {
-      font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--deep-maroon);
-      margin-bottom: 8px;
-    }
-
-    .venue-title {
-      font-weight: 600;
-      color: #222;
-      font-size: 1rem;
-    }
-
-    .venue-address {
-      font-size: 0.85rem;
-      color: #555;
-      margin-top: 4px;
-      line-height: 1.4;
-    }
-
-    /* COUNTDOWN TIMER */
-    .timer-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
-      color: var(--deep-maroon);
-      letter-spacing: 1px;
-      margin-top: 25px;
-    }
-
-    .countdown {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: 15px 0 25px 0;
-    }
-
-    .time-box {
-      background: var(--deep-maroon);
-      color: #fff;
-      padding: 10px 12px;
-      border-radius: 6px;
-      min-width: 60px;
-    }
-
-    .time-box span {
-      display: block;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--primary-gold);
-    }
-
-    .time-box label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* ACTION BUTTONS & QR */
-    .actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .btn {
+    /* BUTTONS & ACTIONS */
+    .btn-group { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 20px; }
+    .action-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--deep-maroon);
-      color: var(--soft-cream);
-      padding: 12px 24px;
+      background: var(--maroon);
+      color: var(--cream);
+      padding: 10px 22px;
       border-radius: 25px;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
-      border: 1px solid var(--primary-gold);
-      transition: all 0.3s ease;
+      border: 1px solid var(--gold);
+      transition: all 0.3s;
       cursor: pointer;
     }
 
-    .btn:hover {
-      background: var(--primary-gold);
-      color: var(--deep-maroon);
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    }
+    .action-btn:hover { background: var(--gold); color: var(--maroon); box-shadow: 0 4px 15px rgba(212,175,55,0.4); }
 
-    .qr-container {
-      margin-top: 15px;
-      padding: 15px;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      display: inline-block;
-    }
+    .qr-box { background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-top: 10px; display: inline-block; }
+    .qr-box img { width: 120px; height: 120px; }
 
-    .qr-container img {
-      width: 130px;
-      height: 130px;
-    }
+    /* GUESTBOOK */
+    .guestbook-form { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
+    .guestbook-input { padding: 10px; border: 1px solid var(--gold); border-radius: 8px; font-family: inherit; }
+    .wishes-list { margin-top: 20px; max-height: 180px; overflow-y: auto; text-align: left; }
+    .wish-item { background: #fff; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); margin-bottom: 8px; font-size: 0.85rem; }
 
-    .qr-label {
-      font-size: 0.75rem;
-      color: #666;
-      margin-top: 6px;
-    }
+    /* Swipe hint */
+    .swipe-hint { font-size: 0.75rem; color: #888; margin-top: 15px; }
   </style>
 </head>
 <body>
 
-  <div class="bg-sparkles"></div>
+  <canvas class="bg-canvas" id="canvasBg"></canvas>
 
-  <!-- Opening Envelope Screen -->
-  <div class="envelope-container" id="envelope" onclick="openInvite()">
-    <div class="envelope-seal">
-      <i class="fa-solid fa-envelope-open-text"></i>
-    </div>
-    <div class="tap-text">Tap to Open Invitation</div>
+  <!-- Animated Flying Cupids -->
+  <div class="cupid" style="top: 15%; animation-delay: 0s;"><i class="fa-solid fa-heart"></i></div>
+  <div class="cupid" style="top: 45%; animation-delay: 5s;"><i class="fa-solid fa-feather"></i></div>
+  <div class="cupid" style="top: 70%; animation-delay: 10s;"><i class="fa-solid fa-heart-pulse"></i></div>
+
+  <!-- Language Switcher -->
+  <div class="lang-switcher">
+    <button class="lang-btn active" id="btnEN" onclick="setLanguage('en')">English</button>
+    <button class="lang-btn" id="btnTA" onclick="setLanguage('ta')">தமிழ்</button>
   </div>
 
-  <!-- Invitation Card -->
-  <div class="card" id="inviteCard">
-    <div class="praise">Praise the Lord</div>
-    <div class="header-verse">
-      "Every good and perfect gift is from above." — James 1:17
-    </div>
-
-    <div class="invitation-body">
-      Together with our families, we warmly invite you to grace the auspicious occasion of our beloved children's engagement ceremony.
-    </div>
-
-    <div class="names-section">
-      <div class="couple-name">Vibin Kumar M V</div>
-      <div class="parents-name">S/o Vimalan M and Regina Princess (Late)</div>
-
-      <div class="ampersand">&</div>
-
-      <div class="couple-name">Preetha Jency</div>
-      <div class="parents-name">D/o Prakasam E and Manonmani P</div>
-    </div>
-
-    <div class="event-details">
-      <div class="date-time">
-        <i class="fa-regular fa-calendar-check"></i> Saturday, December 26, 2026 at 11:00 AM
+  <!-- Envelope Opening Screen -->
+  <div class="envelope-screen" id="envelopeScreen" onclick="openEnvelope()">
+    <div class="envelope-card">
+      <div class="wax-seal">
+        <i class="fa-solid fa-envelope-open-text"></i>
       </div>
-      <div class="venue-title">Parvathi Mahal</div>
-      <div class="venue-address">
-        Old No: 27, 120, Chowdry Nagar Main Rd,<br>
-        Majestic Colony, Valasaravakkam,<br>
-        Chennai, Tamil Nadu 600087
+      <div class="tap-hint" id="langTapHint">Tap to Open Invitation</div>
+    </div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="invite-container" id="inviteContainer">
+    
+    <!-- Navigation Tabs / Swipe Section -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('overview', this)" id="tabOverview">Overview</button>
+      <button class="tab-btn" onclick="switchTab('rings', this)" id="tabRings">Ring Ceremony</button>
+      <button class="tab-btn" onclick="switchTab('venue', this)" id="tabVenue">Venue & Map</button>
+      <button class="tab-btn" onclick="switchTab('guestbook', this)" id="tabGuestbook">Blessings</button>
+    </div>
+
+    <!-- TAB 1: OVERVIEW -->
+    <div class="tab-content active" id="sec-overview">
+      <div class="header-tag" id="txtPraise">PRAISE THE LORD</div>
+      <div class="scripture" id="txtVerse">"Every good and perfect gift is from above." — James 1:17</div>
+      <div class="scripture" id="txtCord">"A cord of three strands is not easily broken." — Ecclesiastes 4:12</div>
+
+      <div class="invitation-text" id="txtInviteBody">
+        Together with our families, we warmly invite you to grace the auspicious occasion of our beloved children's engagement ceremony.
+      </div>
+
+      <div class="couples-area">
+        <div class="person-name">Vibin Kumar M V</div>
+        <div class="parents-info" id="txtGroomParents">S/o Vimalan M & Regina Princess (Late)</div>
+
+        <div class="and-symbol" id="txtAnd">and</div>
+
+        <div class="person-name">Preetha Jency</div>
+        <div class="parents-info" id="txtBrideParents">D/o Prakasam E & Manonmani P</div>
+      </div>
+
+      <div class="details-card">
+        <div class="time-badge" id="txtDateBadge"><i class="fa-regular fa-calendar-check"></i> Saturday, 26 December 2026</div>
+        <div style="font-weight: 600; color: #333;" id="txtTimeBadge"><i class="fa-regular fa-clock"></i> At 12:00 NOON</div>
+      </div>
+
+      <div class="timer-grid">
+        <div class="timer-box"><span class="timer-num" id="d-days">00</span><span class="timer-label" id="lblDays">Days</span></div>
+        <div class="timer-box"><span class="timer-num" id="d-hours">00</span><span class="timer-label" id="lblHours">Hours</span></div>
+        <div class="timer-box"><span class="timer-num" id="d-mins">00</span><span class="timer-label" id="lblMins">Mins</span></div>
+        <div class="timer-box"><span class="timer-num" id="d-secs">00</span><span class="timer-label" id="lblSecs">Secs</span></div>
       </div>
     </div>
 
-    <div class="timer-title">Countdown to the Celebration</div>
-    <div class="countdown">
-      <div class="time-box"><span id="days">00</span><label>Days</label></div>
-      <div class="time-box"><span id="hours">00</span><label>Hours</label></div>
-      <div class="time-box"><span id="minutes">00</span><label>Mins</label></div>
-      <div class="time-box"><span id="seconds">00</span><label>Secs</label></div>
+    <!-- TAB 2: RING CEREMONY ANIMATION -->
+    <div class="tab-content" id="sec-rings">
+      <div class="header-tag" id="txtRingHeading">Modern Ring Exchange</div>
+      <div class="scripture" id="txtRingSub">"Two hearts, one purpose, a beautiful tomorrow."</div>
+
+      <div class="ring-stage">
+        <div class="ring-glow-aura"></div>
+        <div class="sparkle-beam" style="top: 30%; left: 45%;"></div>
+        <div class="sparkle-beam" style="top: 60%; left: 55%; animation-delay: 0.7s;"></div>
+
+        <!-- Groom Ring SVG -->
+        <div class="ring-svg-wrapper groom-ring">
+          <svg viewBox="0 0 100 100" width="100" height="100">
+            <circle cx="50" cy="50" r="35" fill="none" stroke="url(#goldGrad)" stroke-width="8"/>
+            <polygon points="50,10 42,22 58,22" fill="#e0f7fa" stroke="#d4af37" stroke-width="1"/>
+            <defs>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffe89e"/>
+                <stop offset="50%" stop-color="#d4af37"/>
+                <stop offset="100%" stop-color="#997a15"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <!-- Bride Ring SVG -->
+        <div class="ring-svg-wrapper bride-ring">
+          <svg viewBox="0 0 100 100" width="100" height="100">
+            <circle cx="50" cy="50" r="30" fill="none" stroke="url(#goldGrad)" stroke-width="7"/>
+            <polygon points="50,12 40,24 60,24" fill="#ffffff" stroke="#d4af37" stroke-width="1"/>
+            <circle cx="50" cy="18" r="4" fill="#80deea"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="invitation-text" id="txtRingDesc">
+        Exchanging promises of love, commitment, and togetherness.
+      </div>
+      <button class="action-btn" onclick="triggerConfetti()"><i class="fa-solid fa-sparkles"></i> <span id="btnBlessRings">Shower Blessings</span></button>
     </div>
 
-    <div class="actions">
-      <!-- Add to Calendar Google Link -->
-      <a class="btn" target="_blank" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Engagement+Ceremony:+Vibin+%26+Preetha&dates=20261226T053000Z/20261226T083000Z&details=Engagement+ceremony+of+Vibin+Kumar+M+V+and+Preetha+Jency.&location=Parvathi+Mahal,+Chowdry+Nagar+Main+Rd,+Valasaravakkam,+Chennai,+Tamil+Nadu+600087">
-        <i class="fa-regular fa-calendar-plus"></i> Add to Google Calendar
-      </a>
+    <!-- TAB 3: VENUE & MAP -->
+    <div class="tab-content" id="sec-venue">
+      <div class="header-tag">PARVATHI MAHAL</div>
+      <div class="invitation-text" style="margin: 8px 0;">
+        Old No: 27, New No: 120, Chowdry Nagar Main Road,<br>
+        Near Kesavarthini Oil, Majestic Colony, Valasaravakkam,<br>
+        Chennai, Tamil Nadu - 600087
+      </div>
 
-      <!-- Venue QR Code -->
-      <div class="qr-container">
-        <img id="qrCodeImg" src="" alt="Venue Location QR Code">
-        <div class="qr-label">Scan for Venue Location</div>
+      <div class="btn-group">
+        <a class="action-btn" target="_blank" href="https://maps.google.com/?q=Parvathi+Mahal+Valasaravakkam+Chennai">
+          <i class="fa-solid fa-map-location-dot"></i> <span id="btnOpenMaps">Open Google Maps</span>
+        </a>
+
+        <a class="action-btn" target="_blank" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Engagement+Ceremony:+Vibin+%26+Preetha&dates=20261226T063000Z/20261226T093000Z&details=Engagement+ceremony+of+Vibin+Kumar+M+V+and+Preetha+Jency.&location=Parvathi+Mahal,+Valasaravakkam,+Chennai">
+          <i class="fa-regular fa-calendar-plus"></i> <span id="btnAddCal">Add to Google Calendar</span>
+        </a>
+
+        <div class="qr-box">
+          <img id="qrImg" src="" alt="Venue QR Code">
+          <div style="font-size: 0.72rem; color: #666; margin-top: 4px;" id="lblScan">Scan for Direct Location</div>
+        </div>
       </div>
     </div>
+
+    <!-- TAB 4: GUESTBOOK -->
+    <div class="tab-content" id="sec-guestbook">
+      <div class="header-tag" id="txtWishesTitle">Leave Your Blessings</div>
+      <div class="guestbook-form">
+        <input type="text" id="gName" class="guestbook-input" placeholder="Your Name">
+        <textarea id="gMsg" class="guestbook-input" rows="3" placeholder="Write your warm message..."></textarea>
+        <button class="action-btn" onclick="addWish()"><i class="fa-solid fa-paper-plane"></i> <span id="btnSendWish">Send Wishes</span></button>
+      </div>
+
+      <div class="wishes-list" id="wishesList">
+        <div class="wish-item"><strong>Estha:</strong> Wishing Vibin & Preetha a lifetime of happiness and blessings! ❤️</div>
+      </div>
+    </div>
+
+    <div class="swipe-hint" id="txtSwipeHint"><i class="fa-solid fa-arrows-left-right"></i> Swipe left or right to explore tabs</div>
   </div>
 
   <script>
-    // Open Envelope & Launch Confetti
-    function openInvite() {
-      const envelope = document.getElementById('envelope');
-      const card = document.getElementById('inviteCard');
+    // TRANSLATION DATA
+    const i18n = {
+      en: {
+        tapHint: "Tap to Open Invitation",
+        praise: "PRAISE THE LORD",
+        verse: '"Every good and perfect gift is from above." — James 1:17',
+        cord: '"A cord of three strands is not easily broken." — Ecclesiastes 4:12',
+        body: "Together with our families, we warmly invite you to grace the auspicious occasion of our beloved children's engagement ceremony.",
+        groomParents: "S/o Vimalan M & Regina Princess (Late)",
+        brideParents: "D/o Prakasam E & Manonmani P",
+        and: "and",
+        dateBadge: '<i class="fa-regular fa-calendar-check"></i> Saturday, 26 December 2026',
+        timeBadge: '<i class="fa-regular fa-clock"></i> At 12:00 NOON',
+        days: "Days", hours: "Hours", mins: "Mins", secs: "Secs",
+        tabOverview: "Overview", tabRings: "Ring Ceremony", tabVenue: "Venue & Map", tabGuestbook: "Blessings",
+        ringHead: "Modern Ring Exchange",
+        ringSub: '"Two hearts, one purpose, a beautiful tomorrow."',
+        ringDesc: "Exchanging promises of love, commitment, and togetherness.",
+        blessRings: "Shower Blessings",
+        openMaps: "Open Google Maps",
+        addCal: "Add to Google Calendar",
+        scan: "Scan for Direct Location",
+        wishesTitle: "Leave Your Blessings",
+        sendWish: "Send Wishes",
+        swipeHint: '<i class="fa-solid fa-arrows-left-right"></i> Swipe left or right to explore tabs'
+      },
+      ta: {
+        tapHint: "அழைப்பிதழைத் திறக்க தொடவும்",
+        praise: "இறைவனுக்கு ஸ்தோத்திரம்",
+        verse: '"நன்மையான எந்த ஈவும் பூரணமான எந்த வரமும் பரத்திலிருந்து வருகிறது." — யாக்கோபு 1:17',
+        cord: '"முப்புரி நூல் சீக்கிரமாய் அறாது." — பிரசங்கி 4:12',
+        body: "எங்கள் குடும்பத்தாரின் ஆசிகளுடன், அன்புக் குழந்தைகளின் நிச்சயதார்த்த விழாவிற்கு உங்களை அன்போடு அழைக்கின்றோம்.",
+        groomParents: "த/பெ விமலன் M & ரெஜினா பிரின்சஸ் (காலஞ்சென்ற)",
+        brideParents: "ம/பெ பிரகாசம் E & மனோன்மணி P",
+        and: "மற்றும்",
+        dateBadge: '<i class="fa-regular fa-calendar-check"></i> சனிக்கிழமை, 26 டிசம்பர் 2026',
+        timeBadge: '<i class="fa-regular fa-clock"></i> மதியம் 12:00 மணிக்கு',
+        days: "நாட்கள்", hours: "மணி", mins: "நிமிடம்", secs: "விநாடி",
+        tabOverview: "முக்கிய விவரங்கள்", tabRings: "மோதிர விழா", tabVenue: "மண்டபம் & வரைபடம்", tabGuestbook: "வாழ்த்துகள்",
+        ringHead: "மோதிரம் மாற்று விழா",
+        ringSub: '"இரண்டு இதயங்கள், ஒரு இலக்கு, அழகான எதிர்காலம்."',
+        ringDesc: "அன்பு மற்றும் அர்ப்பணிப்பின் வாக்குறுதிகளை பரிமாறிக்கொள்ளும் தருணம்.",
+        blessRings: "வாழ்த்துகளை பொழிய",
+        openMaps: "கூகுள் மேப் திறக்க",
+        addCal: "கேலண்டரில் சேர்க்க",
+        scan: "வரைபடத்திற்கு ஸ்கேன் செய்யவும்",
+        wishesTitle: "உங்கள் வாழ்த்துகளைப் பதிவு செய்ய",
+        sendWish: "வாழ்த்துகளை அனுப்ப",
+        swipeHint: '<i class="fa-solid fa-arrows-left-right"></i> பக்கங்களை மாற்ற இடது/வலதுபுறம் நகர்த்தவும்'
+      }
+    };
 
-      envelope.style.opacity = '0';
-      envelope.style.transform = 'scale(0.8)';
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+      document.getElementById('btnTA').classList.toggle('active', lang === 'ta');
+
+      const data = i18n[lang];
+      document.getElementById('langTapHint').innerText = data.tapHint;
+      document.getElementById('txtPraise').innerText = data.praise;
+      document.getElementById('txtVerse').innerText = data.verse;
+      document.getElementById('txtCord').innerText = data.cord;
+      document.getElementById('txtInviteBody').innerText = data.body;
+      document.getElementById('txtGroomParents').innerText = data.groomParents;
+      document.getElementById('txtBrideParents').innerText = data.brideParents;
+      document.getElementById('txtAnd').innerText = data.and;
+      document.getElementById('txtDateBadge').innerHTML = data.dateBadge;
+      document.getElementById('txtTimeBadge').innerHTML = data.timeBadge;
+      document.getElementById('lblDays').innerText = data.days;
+      document.getElementById('lblHours').innerText = data.hours;
+      document.getElementById('lblMins').innerText = data.mins;
+      document.getElementById('lblSecs').innerText = data.secs;
+
+      document.getElementById('tabOverview').innerText = data.tabOverview;
+      document.getElementById('tabRings').innerText = data.tabRings;
+      document.getElementById('tabVenue').innerText = data.tabVenue;
+      document.getElementById('tabGuestbook').innerText = data.tabGuestbook;
+
+      document.getElementById('txtRingHeading').innerText = data.ringHead;
+      document.getElementById('txtRingSub').innerText = data.ringSub;
+      document.getElementById('txtRingDesc').innerText = data.ringDesc;
+      document.getElementById('btnBlessRings').innerText = data.blessRings;
+
+      document.getElementById('btnOpenMaps').innerText = data.openMaps;
+      document.getElementById('btnAddCal').innerText = data.addCal;
+      document.getElementById('lblScan').innerText = data.scan;
+
+      document.getElementById('txtWishesTitle').innerText = data.wishesTitle;
+      document.getElementById('btnSendWish').innerText = data.sendWish;
+      document.getElementById('txtSwipeHint').innerHTML = data.swipeHint;
+    }
+
+    /* ENVELOPE & CONFETTI */
+    function openEnvelope() {
+      const screen = document.getElementById('envelopeScreen');
+      const card = document.getElementById('inviteContainer');
+
+      screen.style.opacity = '0';
+      screen.style.transform = 'scale(0.8)';
       
       setTimeout(() => {
-        envelope.style.display = 'none';
+        screen.style.display = 'none';
         card.classList.add('show');
-        
-        // Launch Gold Confetti
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#d4af37', '#ffffff', '#8b1e2d']
-        });
+        triggerConfetti();
       }, 500);
     }
 
-    // Dynamic Location QR Code Generator
-    const venueMapsUrl = "https://maps.google.com/?q=Parvathi+Mahal+Valasaravakkam+Chennai";
-    document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(venueMapsUrl)}`;
-
-    // Countdown Timer Logic
-    const targetDate = new Date("December 26, 2026 11:00:00").getTime();
-
-    function updateTimer() {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-        document.getElementById("days").innerText = days < 10 ? '0' + days : days;
-        document.getElementById("hours").innerText = hours < 10 ? '0' + hours : hours;
-        document.getElementById("minutes").innerText = minutes < 10 ? '0' + minutes : minutes;
-        document.getElementById("seconds").innerText = seconds < 10 ? '0' + seconds : seconds;
-      } else {
-        document.querySelector(".countdown").innerHTML = "<div style='color: var(--deep-maroon); font-weight: bold;'>The Celebration Has Begun!</div>";
-      }
+    function triggerConfetti() {
+      confetti({
+        particleCount: 90,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#d4af37', '#ffffff', '#4a0e17']
+      });
     }
 
+    /* TAB SWITCHING */
+    const tabs = ['overview', 'rings', 'venue', 'guestbook'];
+    let currentTabIndex = 0;
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(`sec-${tabId}`).classList.add('active');
+      if (btn) btn.classList.add('active');
+      currentTabIndex = tabs.indexOf(tabId);
+    }
+
+    /* TOUCH SWIPE SUPPORT */
+    let touchStartX = 0;
+    const inviteCard = document.getElementById('inviteContainer');
+
+    inviteCard.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+    inviteCard.addEventListener('touchend', e => {
+      let touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50 && currentTabIndex < tabs.length - 1) {
+        currentTabIndex++;
+        switchTab(tabs[currentTabIndex], document.querySelectorAll('.tab-btn')[currentTabIndex]);
+      } else if (touchEndX - touchStartX > 50 && currentTabIndex > 0) {
+        currentTabIndex--;
+        switchTab(tabs[currentTabIndex], document.querySelectorAll('.tab-btn')[currentTabIndex]);
+      }
+    });
+
+    /* QR CODE GENERATOR */
+    const mapUrl = "https://maps.google.com/?q=Parvathi+Mahal+Valasaravakkam+Chennai";
+    document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(mapUrl)}`;
+
+    /* COUNTDOWN TIMER */
+    const targetDate = new Date("December 26, 2026 12:00:00").getTime();
+    function updateTimer() {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+
+      if (diff > 0) {
+        document.getElementById("d-days").innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+        document.getElementById("d-hours").innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+        document.getElementById("d-mins").innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+        document.getElementById("d-secs").innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+      }
+    }
     setInterval(updateTimer, 1000);
     updateTimer();
+
+    /* GUESTBOOK FUNCTION */
+    function addWish() {
+      const name = document.getElementById('gName').value.trim();
+      const msg = document.getElementById('gMsg').value.trim();
+      if (name && msg) {
+        const item = document.createElement('div');
+        item.className = 'wish-item';
+        item.innerHTML = `<strong>${name}:</strong> ${msg}`;
+        document.getElementById('wishesList').prepend(item);
+        document.getElementById('gName').value = '';
+        document.getElementById('gMsg').value = '';
+        triggerConfetti();
+      }
+    }
   </script>
 </body>
 </html>
