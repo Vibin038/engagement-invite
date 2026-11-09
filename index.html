@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engagement Invitation | Vibin & Preetha</title>
+  
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --primary-gold: #d4af37;
+      --deep-maroon: #4a0e17;
+      --soft-cream: #fffdf9;
+      --text-dark: #2c2c2c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--deep-maroon);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      perspective: 1000px;
+    }
+
+    /* Floating background sparkles */
+    .bg-sparkles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.15) 0%, rgba(74, 14, 23, 0.95) 100%);
+    }
+
+    /* ENVELOPE / OPENING SCREEN */
+    .envelope-container {
+      position: relative;
+      width: 320px;
+      height: 220px;
+      background: #8b1e2d;
+      border-radius: 8px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      border: 2px solid var(--primary-gold);
+    }
+
+    .envelope-container:hover {
+      transform: scale(1.03);
+    }
+
+    .envelope-seal {
+      width: 70px;
+      height: 70px;
+      background: var(--primary-gold);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite;
+    }
+
+    .envelope-seal i {
+      font-size: 2rem;
+      color: var(--deep-maroon);
+    }
+
+    .tap-text {
+      color: #fff;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    /* INVITATION CARD */
+    .card {
+      display: none;
+      width: 90%;
+      max-width: 650px;
+      background: var(--soft-cream);
+      border: 12px double var(--primary-gold);
+      border-radius: 12px;
+      padding: 40px 25px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      z-index: 20;
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      margin: 20px 0;
+    }
+
+    .card.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .header-verse {
+      font-size: 0.85rem;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .praise {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      color: var(--deep-maroon);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    .invitation-body {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.6;
+      margin: 20px 0;
+    }
+
+    .names-section {
+      margin: 25px 0;
+    }
+
+    .couple-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3rem;
+      color: var(--deep-maroon);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .parents-name {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    .ampersand {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.2rem;
+      color: var(--primary-gold);
+      margin: 10px 0;
+    }
+
+    /* EVENT DETAILS */
+    .event-details {
+      background: rgba(212, 175, 55, 0.08);
+      border-top: 1px solid var(--primary-gold);
+      border-bottom: 1px solid var(--primary-gold);
+      padding: 20px 10px;
+      margin: 25px 0;
+    }
+
+    .date-time {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--deep-maroon);
+      margin-bottom: 8px;
+    }
+
+    .venue-title {
+      font-weight: 600;
+      color: #222;
+      font-size: 1rem;
+    }
+
+    .venue-address {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* COUNTDOWN TIMER */
+    .timer-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: var(--deep-maroon);
+      letter-spacing: 1px;
+      margin-top: 25px;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 15px 0 25px 0;
+    }
+
+    .time-box {
+      background: var(--deep-maroon);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 6px;
+      min-width: 60px;
+    }
+
+    .time-box span {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-gold);
+    }
+
+    .time-box label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ACTION BUTTONS & QR */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--deep-maroon);
+      color: var(--soft-cream);
+      padding: 12px 24px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--primary-gold);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: var(--primary-gold);
+      color: var(--deep-maroon);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    }
+
+    .qr-container {
+      margin-top: 15px;
+      padding: 15px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .qr-container img {
+      width: 130px;
+      height: 130px;
+    }
+
+    .qr-label {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-sparkles"></div>
+
+  <!-- Opening Envelope Screen -->
+  <div class="envelope-container" id="envelope" onclick="openInvite()">
+    <div class="envelope-seal">
+      <i class="fa-solid fa-envelope-open-text"></i>
+    </div>
+    <div class="tap-text">Tap to Open Invitation</div>
+  </div>
+
+  <!-- Invitation Card -->
+  <div class="card" id="inviteCard">
+    <div class="praise">Praise the Lord</div>
+    <div class="header-verse">
+      "Every good and perfect gift is from above." — James 1:17
+    </div>
+
+    <div class="invitation-body">
+      Together with our families, we warmly invite you to grace the auspicious occasion of our beloved children's engagement ceremony.
+    </div>
+
+    <div class="names-section">
+      <div class="couple-name">Vibin Kumar M V</div>
+      <div class="parents-name">S/o Vimalan M and Regina Princess (Late)</div>
+
+      <div class="ampersand">&</div>
+
+      <div class="couple-name">Preetha Jency</div>
+      <div class="parents-name">D/o Prakasam E and Manonmani P</div>
+    </div>
+
+    <div class="event-details">
+      <div class="date-time">
+        <i class="fa-regular fa-calendar-check"></i> Saturday, December 26, 2026 at 11:00 AM
+      </div>
+      <div class="venue-title">Parvathi Mahal</div>
+      <div class="venue-address">
+        Old No: 27, 120, Chowdry Nagar Main Rd,<br>
+        Majestic Colony, Valasaravakkam,<br>
+        Chennai, Tamil Nadu 600087
+      </div>
+    </div>
+
+    <div class="timer-title">Countdown to the Celebration</div>
+    <div class="countdown">
+      <div class="time-box"><span id="days">00</span><label>Days</label></div>
+      <div class="time-box"><span id="hours">00</span><label>Hours</label></div>
+      <div class="time-box"><span id="minutes">00</span><label>Mins</label></div>
+      <div class="time-box"><span id="seconds">00</span><label>Secs</label></div>
+    </div>
+
+    <div class="actions">
+      <!-- Add to Calendar Google Link -->
+      <a class="btn" target="_blank" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Engagement+Ceremony:+Vibin+%26+Preetha&dates=20261226T053000Z/20261226T083000Z&details=Engagement+ceremony+of+Vibin+Kumar+M+V+and+Preetha+Jency.&location=Parvathi+Mahal,+Chowdry+Nagar+Main+Rd,+Valasaravakkam,+Chennai,+Tamil+Nadu+600087">
+        <i class="fa-regular fa-calendar-plus"></i> Add to Google Calendar
+      </a>
+
+      <!-- Venue QR Code -->
+      <div class="qr-container">
+        <img id="qrCodeImg" src="" alt="Venue Location QR Code">
+        <div class="qr-label">Scan for Venue Location</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Open Envelope & Launch Confetti
+    function openInvite() {
+      const envelope = document.getElementById('envelope');
+      const card = document.getElementById('inviteCard');
+
+      envelope.style.opacity = '0';
+      envelope.style.transform = 'scale(0.8)';
+      
+      setTimeout(() => {
+        envelope.style.display = 'none';
+        card.classList.add('show');
+        
+        // Launch Gold Confetti
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#d4af37', '#ffffff', '#8b1e2d']
+        });
+      }, 500);
+    }
+
+    // Dynamic Location QR Code Generator
+    const venueMapsUrl = "https://maps.google.com/?q=Parvathi+Mahal+Valasaravakkam+Chennai";
+    document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(venueMapsUrl)}`;
+
+    // Countdown Timer Logic
+    const targetDate = new Date("December 26, 2026 11:00:00").getTime();
+
+    function updateTimer() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = days < 10 ? '0' + days : days;
+        document.getElementById("hours").innerText = hours < 10 ? '0' + hours : hours;
+        document.getElementById("minutes").innerText = minutes < 10 ? '0' + minutes : minutes;
+        document.getElementById("seconds").innerText = seconds < 10 ? '0' + seconds : seconds;
+      } else {
+        document.querySelector(".countdown").innerHTML = "<div style='color: var(--deep-maroon); font-weight: bold;'>The Celebration Has Begun!</div>";
+      }
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+</body>
+</html>
